@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Menu } from './pages/Menu/Menu.tsx'
+import { RouterProvider, createBrowserRouter, defer } from 'react-router-dom'
 import { Cart } from './pages/Cart/Cart.tsx'
 import { Error } from './pages/Error/Error.tsx'
 import { Layout } from './layout/Menu/Layout.tsx'
 import { Product } from './pages/Product/Product.tsx'
+import axios from 'axios'
+import { PREFIX } from './helpers/API.ts'
+const Menu = lazy(() => import('./pages/Menu/Menu.tsx'))
 
 const router = createBrowserRouter([
   {
@@ -15,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Menu />
+        element: <Suspense fallback={<>Загрузка...</>}><Menu /></Suspense>
       },
       {
         path: '/cart',
@@ -23,7 +25,12 @@ const router = createBrowserRouter([
       },
       {
         path: '/product/:id',
-        element: <Product />
+        element: <Product />,
+        loader: async ({params}) => {
+          return defer({
+            data: await axios.get(`${PREFIX}/products/${params.id}`).then(data => data)
+          })
+        }
       }
     ]
   },
