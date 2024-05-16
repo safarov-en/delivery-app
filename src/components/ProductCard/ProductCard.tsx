@@ -4,6 +4,7 @@ import { ProductCardProps } from './ProductCard.props'
 import { useDispatch } from 'react-redux'
 import { AppDispath } from '../../store/store'
 import { cartActions } from '../../store/cart.slice'
+import { MouseEvent } from 'react'
 
 function ProductCard(props: ProductCardProps) {
     const dispatch = useDispatch<AppDispath>()
@@ -14,7 +15,7 @@ function ProductCard(props: ProductCardProps) {
     return (
         <Link to={`/product/${props.id}`} className={styles['link']}>
             <div className={styles['card']}>
-                <div className={styles['head']} style={{backgroundImage: `url('${props.image}')`}}>
+                <div className={styles['head']} style={{ backgroundImage: `url('${props.image}')` }}>
                     <div className={styles['price']}>
                         {props.price}&nbsp;
                         <span className={styles['currency']}>₽</span>
